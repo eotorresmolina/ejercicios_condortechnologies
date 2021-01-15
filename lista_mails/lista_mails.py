@@ -43,10 +43,11 @@ def obtener_flags_mail (mail):
     # Creo una lista con la fecha y los flags.
     mail_split = mail.split('Flags:')
 
+    # Genero la lista "flags" de un único elemento
     flags_fecha = mail_split[1].split('Fecha de Recepción')
     flags = flags_fecha[0].split(':')   # Obtengo los FLAGS.
 
-    return flags[0]
+    return flags[0]  # Retorno el elemento de la lista
 
 
 def ordenar_mails(mails, string_orden):
@@ -59,6 +60,9 @@ def ordenar_mails(mails, string_orden):
     - El string_orden tiene el formato: 
     [!]<FLAG>-(FIFO|LIFO), por ej:
     "B-LIFO|!C-FIFO|C-LIFO"
+
+    La forma en la que se ordena es respecto
+    a su fecha de recepción
 
     Retorna la lista de mails ordenada.
     '''
@@ -82,31 +86,29 @@ def ordenar_mails(mails, string_orden):
         # Obtengo los datos(fecha y flags) de los mails. 
         flags = [obtener_flags_mail(mail) for mail in mails]
 
-        if tipo_lista == 'LIFO': # mayor a menor
+        if tipo_lista == 'LIFO': # En este caso ordeno de mayor a menor
 
             if '!' in contenedor_flag:
                 # Filtro aquellos mails cuyo flag no tengan el flag de orden
-                mails_filtrados = [mail for (mail, dato) in zip(mails, flags) 
-                                    if not(contenedor_flag[1] in dato)]
-
+                mails_filtrados = [mail for (mail, flag) in zip(mails, flags) 
+                                    if not(contenedor_flag[1] in flag)]
             else:
                 # Filtro aquellos mails cuyo flag tengan el flag de orden
-                mails_filtrados = [mail for (mail, dato) in zip(mails, flags)
-                                    if (contenedor_flag in dato)]
+                mails_filtrados = [mail for (mail, flag) in zip(mails, flags)
+                                    if (contenedor_flag in flag)]
 
             lista_ord = [mail for mail in mails_filtrados[::-1] if not (mail in d_ordenado.values())]
    
-        elif tipo_lista == 'FIFO':
+        elif tipo_lista == 'FIFO': # En este caso ordeno de menor a mayor
 
             if '!' in contenedor_flag:
                 # Filtro aquellos mails cuyo flag no tengan el flag de orden
-                 mails_filtrados = [mail for (mail, dato) in zip(mails, flags) 
-                                    if not(contenedor_flag[1] in dato)]
-
+                 mails_filtrados = [mail for (mail, flag) in zip(mails, flags) 
+                                    if not(contenedor_flag[1] in flag)]
             else:
                 # Filtro aquellos mails cuyo flag tengan el flag de orden
-                mails_filtrados = [mail for (mail, dato) in zip(mails, flags)
-                                    if (contenedor_flag in dato)]
+                mails_filtrados = [mail for (mail, flag) in zip(mails, flags)
+                                    if (contenedor_flag in flag)]
    
             lista_ord = [mail for mail in mails_filtrados if not (mail in d_ordenado.values())]
 
