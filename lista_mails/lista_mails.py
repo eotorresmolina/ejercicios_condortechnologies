@@ -33,16 +33,11 @@ __email__ = "emmaotm@gmail.com"
 __version__ = "1.1"
 
 
-def obtener_datos_mail (mail):
+def obtener_flags_mail (mail):
     '''
     Función que recibe el mail en formato
-    string y extrae los datos característicos
-    del mismo.
-    Dichos datos son:
-    - fecha
-    - flags
-
-    Retorna la fecha y los flags del mail.
+    string y extrae los flags del mismo.
+    Retorna los flags del mail.
     '''
 
     # Creo una lista con la fecha y los flags.
@@ -51,14 +46,7 @@ def obtener_datos_mail (mail):
     flags_fecha = mail_split[1].split('Fecha de Recepción')
     flags = flags_fecha[0].split(':')   # Obtengo los FLAGS.
 
-    # Obtengo la fecha separando en dd-mm-aa
-    # Invierto la fecha y concateno: dd-mm-aa --> aa-mm-dd --> aammdd
-    fecha = flags_fecha[1].split(': ')
-    fecha = fecha[1].split('/')
-    fecha = fecha[2] + fecha[1] + fecha[0]
-    fecha = int(fecha)
-
-    return fecha, flags
+    return flags[0]
 
 
 def ordenar_mails(mails, string_orden):
@@ -83,7 +71,6 @@ def ordenar_mails(mails, string_orden):
 
     # Recorro la lista para determinar como voy a ordenar los mails.
     for orden in formato_orden:
-        fecha_ant = None
         lista_ord = []
 
         tipo_lista = orden.split('-')
@@ -92,59 +79,41 @@ def ordenar_mails(mails, string_orden):
         # Obtengo el tipo de lista: LIFO o FIFO
         tipo_lista = tipo_lista[1]
 
-        if tipo_lista == 'LIFO':
+        # Obtengo los datos(fecha y flags) de los mails. 
+        flags = [obtener_flags_mail(mail) for mail in mails]
+
+        if tipo_lista == 'LIFO': # mayor a menor
 
             if '!' in contenedor_flag:
-                for mail in mails:
-                    fecha_act, flags = obtener_datos_mail(mail)
+                # Filtro aquellos mails cuyo flag no tengan el flag de orden
+                mails_filtrados = [mail for (mail, dato) in zip(mails, flags) 
+                                    if not(contenedor_flag[1] in dato)]
 
-                    # Entra si el mail no está en la lista ordenada
-                    if  not (mail in d_ordenado.values()):  
-                        if not(contenedor_flag[1] in flags[0]): 
-                            if fecha_ant is None or fecha_ant <= fecha_act:
-                                lista_ord.append(mail)  
-
-                            fecha_ant = fecha_act       
             else:
-                for mail in mails:
-                    fecha_act, flags = obtener_datos_mail(mail)
+                # Filtro aquellos mails cuyo flag tengan el flag de orden
+                mails_filtrados = [mail for (mail, dato) in zip(mails, flags)
+                                    if (contenedor_flag in dato)]
 
-                    # Entra si el mail no está en la lista ordenada
-                    if  not (mail in d_ordenado.values()):  
-                        if contenedor_flag in flags[0]: 
-                            if fecha_ant is None or fecha_ant <= fecha_act:
-                                lista_ord.append(mail)  
-
-                            fecha_ant = fecha_act      
+            lista_ord = [mail for mail in mails_filtrados[::-1] if not (mail in d_ordenado.values())]
+   
         elif tipo_lista == 'FIFO':
-            
+
             if '!' in contenedor_flag:
-                for mail in mails:
-                    fecha_act, flags = obtener_datos_mail(mail)
+                # Filtro aquellos mails cuyo flag no tengan el flag de orden
+                 mails_filtrados = [mail for (mail, dato) in zip(mails, flags) 
+                                    if not(contenedor_flag[1] in dato)]
 
-                    # Entra si el mail no está en la lista ordenada
-                    if  not (mail in d_ordenado.values()):  
-                        if not(contenedor_flag[1] in flags[0]): 
-                            if fecha_ant is None or fecha_ant <= fecha_act:
-                                lista_ord.append(mail)   
-
-                            fecha_ant = fecha_act       
             else:
-                for mail in mails:
-                    fecha_act, flags = obtener_datos_mail(mail)
+                # Filtro aquellos mails cuyo flag tengan el flag de orden
+                mails_filtrados = [mail for (mail, dato) in zip(mails, flags)
+                                    if (contenedor_flag in dato)]
+   
+            lista_ord = [mail for mail in mails_filtrados if not (mail in d_ordenado.values())]
 
-                    # Entra si el mail no está en la lista ordenada
-                    if  not (mail in d_ordenado.values()):  
-                        if contenedor_flag in flags[0]: 
-                            if fecha_ant is None or fecha_ant <= fecha_act:
-                                lista_ord.append(mail) 
-
-                            fecha_ant = fecha_act       
-                
-        for valor, mail in zip(range(contador, contador + len(lista_ord)), lista_ord[::-1]):
+        for valor, mail in zip(range(contador, contador + len(lista_ord)), lista_ord):
             d_ordenado[valor] = mail
 
-            contador += len(lista_ord)
+        contador += len(lista_ord)
 
     # Obtengo la lista de mails ordenados.
     mails_ordenados = [mail for mail in d_ordenado.values()]
