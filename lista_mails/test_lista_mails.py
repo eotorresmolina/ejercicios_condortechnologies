@@ -10,7 +10,8 @@ la función: "ordenar_mails" del archivo
 "lista_mails".
 
 Para realizar el test copiar la siguiente
-línea de código:
+línea de código que permite importar
+la función:
 
 from lista_mails import ordenar_mails
 '''
