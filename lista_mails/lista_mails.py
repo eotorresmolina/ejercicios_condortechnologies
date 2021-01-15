@@ -61,9 +61,6 @@ def obtener_datos_mail (mail):
     return fecha, flags
 
 
-
-
-
 def ordenar_mails(mails, string_orden):
     '''
     Función principal que permite ordenar
