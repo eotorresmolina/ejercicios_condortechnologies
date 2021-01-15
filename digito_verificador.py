@@ -4,9 +4,12 @@ Dígito Verificador [Python]
 Autor: Torres Molina, Emmanuel O.
 Version: 1.1
 Descripción:
-Programa que buscar calcular un dígito verificador.
-En este caso, para la resolución se hizo uso de la 
-librería Numpy aprovechando sus ventajas.
+Programa que buscar calcular un dígito verificador
+en base a un número entero de "x" dígitos.
+
+En este caso, para la resolución se hizo mayormente
+uso de las funciones de la librería "Numpy" aprovechando 
+sus ventajas.
 '''
 
 __author__ = "Torres Molina, Emmanuel O."
