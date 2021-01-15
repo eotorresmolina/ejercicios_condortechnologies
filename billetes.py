@@ -25,7 +25,7 @@ def dinero_caja (caja):
     '''
     Función que analiza el dinero que hay disponible
     en la caja.
-    Recibe como parámetro, en este caso, un objeto
+    Recibe, en este caso, un objeto
     de la clase "dict" que contiene los billetes y
     su cantidad.
     Retorna una lista con los billetes disponibles, la
