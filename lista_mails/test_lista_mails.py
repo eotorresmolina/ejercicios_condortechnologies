@@ -31,7 +31,5 @@ if __name__ == "__main__":
             'MailF Flags: A C Fecha de Recepción: 03/12/15']
 
     string_orden = 'B-LIFO|!C-FIFO|C-LIFO'
-
     mails_ordenados = ordenar_mails(mails, string_orden)
-
     print(mails_ordenados)
