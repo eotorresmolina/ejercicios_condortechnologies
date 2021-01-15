@@ -112,7 +112,7 @@ def ordenar_mails(mails, string_orden):
    
             lista_ord = [mail for mail in mails_filtrados if not (mail in d_ordenado.values())]
 
-        # Voy almacenando los mails en forma ordenada en el diccionario --> {1: 'MailX', {2: 'MailY}, ...}
+        # Almaceno los mails en forma ordenada en el diccionario --> {1: 'MailX', {2: 'MailY}, ...}
         for valor, mail in zip(range(contador, contador + len(lista_ord)), lista_ord):
             d_ordenado[valor] = mail
 
